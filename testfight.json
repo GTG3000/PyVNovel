@@ -1,0 +1,136 @@
+{
+    "resources": {
+		"image": {
+			"idle": "res/bot1_idle.png",
+			"charge": "res/bot1_charge.png",
+			"punch": "res/bot1_punch.png",
+			"recoil": "res/bot1_recoil.png",
+			"block": "res/bot1_block.png",
+			"defeated": "res/bot1_defeated.png",
+			"cube": ["testsprite.png", 2, 2, 0.1]
+		},
+		"sound": {
+			"punch": "res/player_attack_punch.wav",
+			"charge": "res/player_attack_punch_charging.wav",
+			"deflect": "res/player_attack_pick_metal.wav",
+			"take_hit": "res/laserbox_hit.wav",
+			"lose": "res/trilobite_mecha_dig.wav"
+		}
+	},
+
+	"storage": {
+		"health": 10
+	},
+
+
+	"start": {
+		"action": [
+
+		],
+		"anim": [{
+			"image": "idle",
+			"time": 1,
+			"effect": "fade_in"
+		}],
+		"trans": {
+			"anim_end": "idle"
+		}
+	},
+
+	"idle": {
+		"action": {},
+		"anim": [{
+			"image": "idle",
+			"time": 1
+		}],
+		"trans": {
+			"anim_end": [
+				["idle", 1],
+				["charge", 1]
+			],
+			"hit_any": "block"
+		}
+	},
+
+	"charge": {
+		"action": [],
+		"anim": [{
+			"sound": "charge",
+			"image": "charge",
+			"time": 1
+		}],
+		"trans": {
+			"anim_end": "punch",
+			"hit_any": "recoil"
+		}
+	},
+
+	"recoil": {
+		"action": [
+			[":=", "health", ["-", "health", 1]]
+		],
+		"anim": [{
+			"sound": "take_hit",
+			"image": "recoil",
+			"time": 0.5
+		}],
+		"trans": {
+			"check": [
+				["<=", "health", 0, "defeated"]
+			],
+			"anim_end": "idle"
+		}
+	},
+
+	"block": {
+		"action": [],
+		"anim": [{
+			"image": "block",
+			"sound": "deflect",
+			"time": 0.5
+		}],
+		"trans": {
+			"anim_end": "idle"
+		}
+	},
+
+	"punch": {
+		"action": [
+			["hit", "center", 1]
+		],
+		"anim": [{
+			"sound": "punch",
+			"image": "punch",
+			"time": 0.5
+		}],
+		"trans": {
+			"anim_end": "idle"
+		}
+	},
+
+	"defeated": {
+		"action": [],
+		"anim": [{
+				"sound": "lose",
+				"image": "defeated",
+				"time": 0.5
+			},
+			{
+				"effect": "fade_out",
+				"time": 0.5
+			}
+		],
+		"trans": {
+			"anim_end": "stop"
+		}
+	},
+
+	"stop": {
+		"action": [
+			["win_fight"]
+		],
+		"anim": [{"time":1}],
+		"trans": {}
+	}
+
+}
