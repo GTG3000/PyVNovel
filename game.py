@@ -25,6 +25,34 @@ def r_path(relative):
     # return os.path.join(relative)
 
 
+class SpriteStorage(cocos.cocosnode.CocosNode):
+    """
+    Wrapper class to handle animootions
+    """
+    anim_stages = []
+    anim_step = 0
+    anim_counter = 0
+    anim_loop = False
+    anim_ended = False
+    env = {}
+
+    def __init__(self, anim, env):
+        super(SpriteStorage).__init__()
+        self.anim_stages = anim
+        self.env = env
+        self.anim_step = 0
+        self.anim_counter = 0
+        self.anim_loop = any(x.get('loop', False) for x in self.anim_stages)
+        self.anim_ended = False
+
+    def anim_end(self):
+        return self.anim_loop or self.anim_ended
+
+    def update(self, dt):
+        self.anim_counter = min(self.anim_stages[self.anim_step].get('time', 0), self.anim_counter + dt)
+
+
+
 class StateMachine(cocos.cocosnode.CocosNode):
     """
     A class for loading and storing a state machine.
